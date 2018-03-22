@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
@@ -21,33 +22,45 @@ import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
+    private String mCategory;
     private List<GankData.ResultsBean> mResults;
     private Context context;
 
-    public ItemAdapter(Context context, List<GankData.ResultsBean> results) {
+
+    public ItemAdapter(Context context, List<GankData.ResultsBean> results,String category) {
         this.context = context;
         mResults = results;
+        mCategory = category;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item, null, false);
+        View view=null;
+        if (GlobalConfig.CATEGORY_FULI.equals(mCategory)) {
+            view=LayoutInflater.from(context).inflate(R.layout.item_image,null,false);
+        }else{
+            view = LayoutInflater.from(context).inflate(R.layout.item, null, false);
+        }
         return new ViewHolder(view);
     }
-
 
 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         GankData.ResultsBean resultsBean = mResults.get(position);
-        holder.mItemTimeTv.setText(resultsBean.getPublishedAt().substring(0,10));
-        holder.mItemTitleTv.setText(resultsBean.getDesc());
-        holder.mItemPublisherTv.setText(resultsBean.getWho());
-        if (resultsBean.getImages() != null) {
-            Glide.with(context).load(resultsBean.getImages().get(0)).into(holder.mItemImgIv);
+        if (!GlobalConfig.CATEGORY_FULI.equals(mCategory)) {
+            holder.mItemTimeTv.setText(resultsBean.getPublishedAt().substring(0,10));
+            holder.mItemTitleTv.setText(resultsBean.getDesc());
+            holder.mItemPublisherTv.setText(resultsBean.getWho());
+            if (resultsBean.getImages() != null) {
+                Glide.with(context).load(resultsBean.getImages().get(0)).into(holder.mItemImgIv);
+            }else{
+                holder.mItemImgIv.setVisibility(View.GONE);
+            }
+        }else{
+            Glide.with(context).load(resultsBean.getUrl()).into(holder.mItemImageView);
         }
-
     }
 
     @Override
@@ -62,17 +75,21 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         private AppCompatTextView mItemPublisherTv;
         private AppCompatTextView mItemTimeTv;
         private AppCompatImageView mItemImgIv;
-        private LinearLayout mItemLl;
+        private ImageView mItemImageView;
         public ViewHolder(View itemView) {
             super(itemView);
             initView(itemView);
         }
         private void initView(@NonNull final View itemView) {
-            mItemTitleTv = (AppCompatTextView) itemView.findViewById(R.id.tv_item_title);
-            mItemPublisherTv = (AppCompatTextView) itemView.findViewById(R.id.tv_item_publisher);
-            mItemTimeTv = (AppCompatTextView) itemView.findViewById(R.id.tv_item_time);
-            mItemImgIv = (AppCompatImageView) itemView.findViewById(R.id.iv_item_img);
-            mItemLl = (LinearLayout) itemView.findViewById(R.id.ll_item);
+            if (GlobalConfig.CATEGORY_FULI.equals(mCategory)) {
+                mItemImageView = ((ImageView) itemView.findViewById(R.id.item_img));
+            }else{
+                mItemTitleTv = (AppCompatTextView) itemView.findViewById(R.id.tv_item_title);
+                mItemPublisherTv = (AppCompatTextView) itemView.findViewById(R.id.tv_item_publisher);
+                mItemTimeTv = (AppCompatTextView) itemView.findViewById(R.id.tv_item_time);
+                mItemImgIv = (AppCompatImageView) itemView.findViewById(R.id.iv_item_img);
+            }
+
         }
     }
 }
