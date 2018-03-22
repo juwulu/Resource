@@ -1,6 +1,7 @@
 package com.jwl;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -10,9 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.jwl.entity.GankData;
+import com.jwl.module.webview.WebViewActivity;
+import com.jwl.module.webview.WebViewContract;
 
 import java.util.List;
 
@@ -48,11 +52,19 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        GankData.ResultsBean resultsBean = mResults.get(position);
+        final GankData.ResultsBean resultsBean = mResults.get(position);
         if (!GlobalConfig.CATEGORY_FULI.equals(mCategory)) {
             holder.mItemTimeTv.setText(resultsBean.getPublishedAt().substring(0,10));
             holder.mItemTitleTv.setText(resultsBean.getDesc());
             holder.mItemPublisherTv.setText(resultsBean.getWho());
+            holder.mItemRl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, WebViewActivity.class);
+                    intent.putExtra("url",resultsBean.getUrl());
+                    context.startActivity(intent);
+                }
+            });
             if (resultsBean.getImages() != null) {
                 Glide.with(context).load(resultsBean.getImages().get(0)).into(holder.mItemImgIv);
             }else{
@@ -76,6 +88,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         private AppCompatTextView mItemTimeTv;
         private AppCompatImageView mItemImgIv;
         private ImageView mItemImageView;
+        private RelativeLayout mItemRl;
+
         public ViewHolder(View itemView) {
             super(itemView);
             initView(itemView);
@@ -88,6 +102,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 mItemPublisherTv = (AppCompatTextView) itemView.findViewById(R.id.tv_item_publisher);
                 mItemTimeTv = (AppCompatTextView) itemView.findViewById(R.id.tv_item_time);
                 mItemImgIv = (AppCompatImageView) itemView.findViewById(R.id.iv_item_img);
+                mItemRl = ((RelativeLayout) itemView.findViewById(R.id.rl_item));
             }
 
         }

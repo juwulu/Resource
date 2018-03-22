@@ -20,7 +20,6 @@ import com.jwl.R;
 import com.jwl.api.GankService;
 import com.jwl.entity.GankData;
 
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
