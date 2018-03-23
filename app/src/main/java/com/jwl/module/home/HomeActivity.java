@@ -121,7 +121,5 @@ public class HomeActivity extends AppCompatActivity
     public void setDatas() {
         mViewPager = ((ViewPager) findViewById(R.id.viewpager));
         mViewPager.setAdapter(new HomeAdapter(getSupportFragmentManager(),mFragmentList));
-
-
     }
 }

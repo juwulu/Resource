@@ -3,6 +3,7 @@ package com.jwl.module.webview;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -13,9 +14,9 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.jwl.R;
+import com.jwl.utils.WebViewUtil;
 
 public class WebViewActivity extends AppCompatActivity implements WebViewContract.View {
 
@@ -47,10 +48,13 @@ public class WebViewActivity extends AppCompatActivity implements WebViewContrac
                 public boolean onMenuItemClick(MenuItem menuItem) {
                     switch (menuItem.getItemId()) {
                         case R.id.toolbar_browser:
+                            WebViewUtil.openInBrowser(WebViewActivity.this,url);
                             break;
                         case R.id.toolbar_copylink:
+                            WebViewUtil.copyLink(WebViewActivity.this,url);
                             break;
                         case R.id.toolbar_share:
+                            WebViewUtil.sendUrl(WebViewActivity.this,url);
                             break;
                     }
                     return false;
