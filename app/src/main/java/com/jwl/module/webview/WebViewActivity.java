@@ -1,7 +1,9 @@
 package com.jwl.module.webview;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -11,6 +13,7 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.jwl.R;
 
@@ -21,6 +24,7 @@ public class WebViewActivity extends AppCompatActivity implements WebViewContrac
     private WebView mWbContent;
     private WebViewContract.Presenter mPresenter = new WebViewPresenter(this) ;
     private String url;
+    private Toolbar mToolbar;
 
 
     @Override
@@ -28,7 +32,6 @@ public class WebViewActivity extends AppCompatActivity implements WebViewContrac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         url =  getIntent().getStringExtra("url");
-        Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
         initView();
     }
 
@@ -36,6 +39,24 @@ public class WebViewActivity extends AppCompatActivity implements WebViewContrac
 
     private void initView() {
         mIvClose = (ImageView) findViewById(R.id.close_iv);
+        mToolbar = ((Toolbar) findViewById(R.id.toolbar));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mToolbar.inflateMenu(R.menu.toolbar_menu);
+            mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.toolbar_browser:
+                            break;
+                        case R.id.toolbar_copylink:
+                            break;
+                        case R.id.toolbar_share:
+                            break;
+                    }
+                    return false;
+                }
+            });
+        }
         mIvClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,12 +81,14 @@ public class WebViewActivity extends AppCompatActivity implements WebViewContrac
         mWbContent.setWebChromeClient(new WebChromeClient(){
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
-                if (newProgress==100) {
+                if (mPbWeb.getProgress()==100) {
                     mPbWeb.setVisibility(View.GONE);
                 }else{
                     mPbWeb.setProgress(newProgress);
                     mPbWeb.setVisibility(View.VISIBLE);
                 }
+
+
                 super.onProgressChanged(view, newProgress);
             }
         });
@@ -74,7 +97,7 @@ public class WebViewActivity extends AppCompatActivity implements WebViewContrac
 
     @Override
     public void showNetworkError() {
-        if (!mPresenter.checkNetworkAvaible()) {
+        if (mPresenter.checkNetworkAvaible()) {
             Toast.makeText(this, "网络连接错误", Toast.LENGTH_SHORT).show();
         }
     }
