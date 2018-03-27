@@ -12,7 +12,6 @@ import com.jwl.entity.GankData;
 
 public interface HomeContract {
     interface Presenter extends BasePresenter{
-
     }
 
     interface View extends BaseView<Presenter>{

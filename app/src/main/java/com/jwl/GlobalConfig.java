@@ -13,4 +13,6 @@ public class GlobalConfig {
     public static final String CATEGORY_APP="App";
     public static final String CATEGORY_FULI="福利";
     public static final String[] CATEGORIES={CATEGORY_APP,CATEGORY_ANDROID,CATEGORY_IOS,CATEGORY_QIANDUAN,CATEGORY_KUOZHANZIYUAN,CATEGORY_ALL,CATEGORY_FULI};
+
+
 }
